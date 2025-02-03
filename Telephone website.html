@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telephone</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ff4d4d;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      width: 90%;
+      max-width: 800px;
+    }
+
+    button {
+      background-color: #ff4d4d;
+      color: #121212;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1em;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #ff3333;
+    }
+
+    .conversation {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ff4d4d;
+      border-radius: 5px;
+      background-color: #1e1e1e;
+      transition: color 0.1s ease, filter 0.3s ease;
+    }
+
+    /* Blur effect with intensity */
+    .blur {
+      filter: blur(2px); /* Default weak blur */
+    }
+
+    .blur.level-2 {
+      filter: blur(4px);
+    }
+
+    .blur.level-3 {
+      filter: blur(6px);
+    }
+
+    .blur.level-4 {
+      filter: blur(8px);
+    }
+
+    /* Rainbow animation */
+    .rainbow-effect {
+      animation: rainbow 2s infinite linear;
+    }
+
+    @keyframes rainbow {
+      0% { color: hsl(0, 100%, 50%); }
+      20% { color: hsl(72, 100%, 50%); }
+      40% { color: hsl(144, 100%, 50%); }
+      60% { color: hsl(216, 100%, 50%); }
+      80% { color: hsl(288, 100%, 50%); }
+      100% { color: hsl(360, 100%, 50%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="header-text">hello?</h1>
+    <button id="generate-btn" onclick="generateConversation()">pick up the phone</button>
+    <div id="conversation" class="conversation"></div>
+  </div>
+
+  <script>
+    const conversations = [
+      "Sometimes I feel like the world would be better off without me.",
+      "That’s a very painful thought to carry. Let’s talk about it.",
+      "I can’t seem to escape the darkness in my mind.",
+      "The darkness can feel overwhelming, but you don’t have to face it alone.",
+      "I’m so tired of fighting these feelings every day.",
+      "You’ve been so strong to keep going, and I’m here to help lighten the load.",
+      "I just want the pain to stop, even if it means I stop too.",
+      "There are ways to ease the pain without letting it consume you. Let’s explore them together.",
+      "I feel like nobody would even care if I were gone.",
+      "You are deeply valued, even when it doesn’t feel that way. Let’s find the support you need.",
+      "I’ve thought about ending it all, and it scares me.",
+      "It’s brave to share this. Let’s talk about what’s brought you here and how we can make it better.",
+      "I feel like I’m drowning in my own thoughts.",
+      "Let’s take a moment to breathe and sort through those thoughts together.",
+      "Every day feels like a battle I’m losing.",
+      "You’re still here, and that’s a victory in itself. Let’s keep fighting together.",
+      "I’ve been hurting for so long, and I don’t see an end to it.",
+      "Pain can feel endless, but there are ways to find relief. Let’s look for them together.",
+      "I’m scared of how far my thoughts have gone.",
+      "Your fear shows you want things to change. Let’s work on finding hope again.",
+      "I feel like I’m breaking into pieces, and there’s nothing left of me.",
+      "You’re still whole, even when it doesn’t feel that way. Let’s rebuild together.",
+      "I don’t think I can take another day of this.",
+      "Let’s focus on getting through this moment first. I’m here with you.",
+      "The weight of everything feels unbearable.",
+      "Let’s try to lift that weight together, one piece at a time.",
+      "I feel so empty, like there’s nothing left inside me.",
+      "That emptiness can be filled again. Let’s find what you need to heal.",
+      "I don’t see a point in living anymore.",
+      "Life’s meaning can get lost in the pain, but it can be rediscovered. Let’s start here.",
+      "I feel like I’ve failed everyone who ever cared about me.",
+      "You haven’t failed anyone. Let’s talk about how you’re feeling and what’s next.",
+      "I can’t stop thinking about ending my pain permanently.",
+      "Let’s talk about that pain and find ways to ease it together.",
+      "I feel like I’ve lost all hope.",
+      "Hope can be rebuilt, even from the smallest flicker. Let’s work on it together.",
+      "Nobody understands the depth of what I’m going through.",
+      "Your pain is unique to you, but you don’t have to bear it alone. Let’s talk about it.",
+      "Sometimes I wish I could just disappear forever.",
+      "Your presence matters, even when it’s hard to see it. Let’s explore what’s causing these feelings.",
+      "I feel like I’m screaming for help, but nobody hears me.",
+      "I hear you, and I’m here to listen and support you.",
+      "I’ve been pretending to be okay for so long, and I’m exhausted.",
+      "You don’t have to pretend anymore. Let’s talk about what’s really going on.",
+      "I feel like I’m a burden to everyone around me.",
+      "You are not a burden. Let’s work through these feelings together.",
+      "I’ve started to think people would be better off without me.",
+      "The truth is, you’re needed and valued. Let’s find ways to remind you of that.",
+      "I’m scared of what I might do to myself.",
+      "Your safety is the most important thing right now. Let’s focus on keeping you safe.",
+      "I feel like there’s no light at the end of the tunnel.",
+      "Even the darkest tunnels have an end. Let’s look for that light together.",
+      "I don’t think anyone could ever love someone like me.",
+      "You are deserving of love and care. Let’s start by showing some to yourself.",
+      "I feel like I’m stuck in a nightmare I can’t wake up from.",
+      "Nightmares end, and you’re not alone in facing this one. Let’s talk about it.",
+      "I’m so tired of feeling this way every day.",
+      "You’ve carried this weight for so long. Let’s find ways to lighten it together.",
+      "I feel like I’ve hit rock bottom and there’s no way up.",
+      "Rock bottom can be a foundation to rebuild on. Let’s start together.",
+      "I just want someone to understand how much I’m hurting.",
+      "I hear your pain, and I want to understand it better. Let’s talk about it.",
+      "Sometimes I think it’d be easier if I just didn’t exist.",
+      "Your existence matters. Let’s work on making it feel that way to you too."
+    ];
+
+    let generationCount = 0;
+    let jargonLevel = 0;
+
+    function generateConversation() {
+      const randomIndex = Math.floor(Math.random() * conversations.length);
+      let conversation = conversations[randomIndex];
+      generationCount++;
+
+      if (generationCount % 10 === 0) {
+        jargonLevel++;
+      }
+
+      conversation = replaceWordsWithJargon(conversation, jargonLevel);
+      const conversationText = document.getElementById("conversation");
+      conversationText.textContent = conversation;
+
+      // Update blur/rainbow effect
+      conversationText.className = "conversation"; // Reset classes
+      if (jargonLevel > 2) {
+        conversationText.classList.add("rainbow-effect");
+      }
+      if (jargonLevel >= 3) {
+      const blurAmount = (jargonLevel - 2) * 0.5; // Gradual increase in blur
+      conversationText.style.filter = `blur(${blurAmount}px)`;
+    } else {
+      conversationText.style.filter = "none";
+    }
+    if (jargonLevel >= 4) {
+      document.body.style.backgroundImage = "url('rorschach.gif')";
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backgroundPosition = "center";
+    } else {
+      document.body.style.backgroundImage = "none";
+    }
+    const yesButton = document.getElementById("generate-btn");
+    if (jargonLevel >= 6) {
+      document.getElementById("header-text").textContent = "Are you still here?";
+      yesButton.textContent = "Yes";
+    }
+
+    // Add a "No" button if jargon level is 7 or above
+    if (jargonLevel >= 6 && !document.getElementById("no-btn")) {
+      const noButton = document.createElement("button");
+      noButton.id = "no-btn";
+      noButton.textContent = "No";
+      noButton.style.marginLeft = "10px";
+      noButton.onclick = function() {
+        window.location.href = "https://your-new-website.com"; // Change URL to desired destination
+      };
+      document.getElementById("generate-btn").after(noButton);
+    }
+    if (jargonLevel > 8) {
+      yesButton.onclick = function () {
+        window.location.href = "https://your-new-website.com"; // Change this URL
+      };
+    } else {
+      yesButton.onclick = generateConversation; // Ensures normal function until jargonLevel > 8
+    }
+  }
+    
+
+    function replaceWordsWithJargon(text, jargonLevel) {
+      const jargon = [
+        "quantum synergy", "existential recursion", "paradigm flux", "nonlinear ontology",
+        "semantic dissonance", "ontological pivot", "hyperbolic tangent", "chaotic entropy", "?", "???",
+        "ghost", "vanitas", "ecstasy", "misery"
+      ];
+      const words = text.split(" ");
+      const numberOfReplacements = Math.min(jargonLevel, words.length);
+
+      for (let i = 0; i < numberOfReplacements; i++) {
+        const randomWordIndex = Math.floor(Math.random() * words.length);
+        const randomJargon = jargon[Math.floor(Math.random() * jargon.length)];
+        words[randomWordIndex] = randomJargon;
+      }
+
+      return words.join(" ");
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("generate-btn").onclick = generateConversation;
+  });
+  </script>
+</body>
+</html>
