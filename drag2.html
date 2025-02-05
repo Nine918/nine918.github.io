@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing with</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: gray;
+          background: url('breathe.gif') no-repeat top center;
+          background-size: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-attachment: fixed;
+      }
+      .chat-container {
+          width: 60%;
+          max-width: 700px;
+          background-color: rgba(255, 255, 255, 0.8);
+          border-radius: 10px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .chat-header {
+          font-size: 1.25rem;
+          font-weight: bold;
+          text-align: center;
+      }
+      .chat-input-container {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+      }
+      .chat-input-container input {
+          padding: 10px;
+          margin: 10px 0;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 1rem;
+          width: 100%;
+          box-sizing: border-box;
+          max-width: 100%;
+          min-width: 0;
+      }
+      .chat-button {
+          background-color: black;
+          color: white;
+          border: none;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background-color 0.3s;
+      }
+      .chat-button:hover {
+          background-color: #333;
+      }
+      /* Style for credit screen layout */
+      .credit-screen {
+          display: none;
+          text-align: center;
+          color: white;
+          font-size: 2rem;
+          font-family: 'Courier New', Courier, monospace; /* Change font */
+          padding: 40px;
+          background-color: rgba(0, 0, 0, 0.8);
+          border-radius: 15px;
+          width: 80%;
+          max-width: 800px;
+          margin: 0 auto; /* Center the credit screen */
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+      .credit-screen h1 {
+    color: red;
+}
+
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header" id="chatHeader"></div>
+    <div class="chat-input-container">
+        <input type="text" id="userInput" placeholder="Say something" oninput="handleTyping()">
+        <button class="chat-button" onclick="showResponse()">Send</button>
+    </div>
+</div>
+
+<div id="creditScreen" class="credit-screen">
+  <h1>Telephone</h1>
+  <p></p>
+  <p>Made by Nine918</p>
+  <p></p>
+  <p>Thank you</p>
+</div>
+
+<script>
+    // Predefined sentences
+    const sentences = [
+        "With me, breathe in and out to the animation",
+        "Kind of a cool animation, don't you think so?",
+        "How's your breathing?",
+        "Must be because of the amazing animation",
+        "What's on your mind right now?"
+    ];
+    
+    let currentSentenceIndex = 0;
+    let typedText = "";  // Keep track of what the user has typed
+
+    const audio = new Audio('clear.mp3'); // Audio for second sentence
+    audio.loop = true;  // Make the audio loop
+    // Function to handle typing animation
+    function handleTyping() {
+        const userInput = document.getElementById('userInput');
+        
+        // Ensure typing is happening letter by letter
+        if (userInput.value.length > typedText.length) {
+            typedText = sentences[currentSentenceIndex].substring(0, userInput.value.length);
+        }
+
+        userInput.value = typedText;
+    }
+
+    function showResponse() {
+        const userInput = document.getElementById('userInput');
+        const chatHeader = document.getElementById('chatHeader');
+        const inputContainer = document.getElementsByClassName('chat-input-container')[0];
+        const creditScreen = document.getElementById('creditScreen');
+
+        // First sentence completion
+        if (currentSentenceIndex === 0 && userInput.value === sentences[0]) {
+            userInput.value = ''; // Clear the input
+            currentSentenceIndex++; // Move to next sentence
+            typedText = ""; // Reset typedText
+            userInput.removeAttribute("disabled"); // Re-enable input
+        }
+        
+        // Second sentence completion
+        if (currentSentenceIndex === 1 && userInput.value === sentences[1]) {
+            userInput.value = ''; // Clear the input
+            chatHeader.innerHTML = "I guess so"; // Change the header text
+            currentSentenceIndex++;
+            typedText = "";
+            userInput.removeAttribute("disabled");
+            audio.play();
+        }
+
+        // Third sentence completion
+        if (currentSentenceIndex === 2 && userInput.value === sentences[2]) {
+            userInput.value = ''; // Clear the input
+            chatHeader.innerHTML = "It's a bit better now";
+            currentSentenceIndex++;
+            typedText = "";
+            userInput.removeAttribute("disabled");
+        }
+
+        // Fourth sentence completion
+        if (currentSentenceIndex === 3 && userInput.value === sentences[3]) {
+            userInput.value = ''; // Clear the input
+            chatHeader.innerHTML = "Maybe"; // This will be the last sentence text
+            currentSentenceIndex++;
+            typedText = "";
+            userInput.removeAttribute("disabled");
+            document.body.style.background = "white"; // Change background color to white
+        }
+
+        // Transition to credit screen after last sentence
+        if (currentSentenceIndex === 4 && userInput.value === sentences[4]) {
+            userInput.value = ''; // Clear the input
+            inputContainer.style.display = "none"; // Hide the input container
+            chatHeader.style.display = "none"; // Hide the chat header
+            creditScreen.style.display = "block"; // Show the credit screen
+            document.body.style.background = "white"; // Ensure background is white
+        }
+    }
+</script>
+
+</body>
+</html>

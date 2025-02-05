@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: white;
+            overflow: hidden;
+        }
+        .content {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        header {
+            width: 80%;
+            padding: 20px;
+            background: white;
+            text-align: center;
+            font-size: 24px;
+            border-radius: 10px;
+            color: blue;
+        }
+        .input-box {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid lavender;
+            border-radius: 5px;
+            background: white;
+            color: blue;
+            position: relative;
+            z-index: 10;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: red;
+            pointer-events: none;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 5;
+        }
+        .corner-image, .random-image {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+        }
+        .top-left { top: 10px; left: 10px; }
+        .top-right { top: 10px; right: 10px; }
+        .bottom-left { bottom: 10px; left: 10px; }
+        .bottom-right { bottom: 10px; right: 10px; }
+        .random-image { top: 30%; left: 70%; }
+        .label {
+            position: absolute;
+            color: red;
+            font-size: 18px;
+            font-weight: bold;
+            background: white;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>Do you even remember what I said?</header>
+        <input type="text" class="input-box" id="userInput" placeholder="Say something">
+    </div>
+    <audio id="backgroundMusic" loop>
+      <source src="choir1.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+  </audio>
+    <img src="false1.gif" class="corner-image top-left" alt="Corner Image">
+    <span class="label" style="top: 5px; left: 5px;">1</span>
+    <img src="rorschach.gif" class="corner-image top-right" alt="Corner Image">
+    <span class="label" style="top: 5px; right: 5px;">2</span>
+    <img src="false2.gif" class="corner-image bottom-left" alt="Corner Image">
+    <span class="label" style="bottom: 5px; left: 5px;">3</span>
+    <img src="false3.gif" class="corner-image bottom-right" alt="Corner Image">
+    <span class="label" style="bottom: 5px; right: 5px;">4</span>
+    <img src="false4.gif" class="random-image" alt="Random Image">
+    <span class="label" style="top: 35%; left: 72%;">5</span>
+    <canvas id="eraserCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('eraserCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        ctx.fillStyle = 'red';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        canvas.addEventListener('mousemove', function(event) {
+            const x = event.clientX;
+            const y = event.clientY;
+            
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 35, 0, Math.PI * 2);
+            ctx.fill();
+            
+            playMusic();
+        });
+        
+        function checkInput() {
+            const input = document.getElementById('userInput').value.toLowerCase();
+            if (input === '2') {
+                window.location.href = 'drag.html';
+            }
+            else {
+                window.location.href = 'end.html'; // Change to your alternate redirect URL
+            }
+        }
+        
+        document.getElementById('userInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkInput();
+            }
+        });
+        
+        function playMusic() {
+            const music = document.getElementById('backgroundMusic');
+            if (music.paused) {
+                music.play();
+            }
+        }
+    </script>
+</body>
+</html>

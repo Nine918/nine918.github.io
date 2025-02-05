@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End</title>
+    <style>
+        body {
+            background: url('fractal.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: lightblue;
+            text-align: center;
+            font-family: "Times New Roman", serif;
+            padding-top: 20%;
+        }
+        h1 {
+            font-size: 3em;
+        }
+        p {
+            color: red;
+            font-size: 2em;
+        }
+        button {
+            background-color: lightblue;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #ADD8E6;
+        }
+        .butterfly {
+          position: absolute;
+            width: 25px;
+            height: auto;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body onclick="playMusic()">
+    <h1>After all, I too am only</h1>
+    <p><a href="index.html" style="color: red; text-decoration: none;">human</a></p>
+    <button onclick="window.location.href='https://youtu.be/EETV2JNBhcc?si=vuSGKKOTV4QlWKe1'">Go somewhere else</button>
+    <audio id="backgroundMusic" loop>
+      <source src="distort1.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+  </audio>
+   <script>
+
+function playMusic() {
+            document.getElementById("backgroundMusic").play();
+        }
+
+        
+      const butterflies = [];
+      const numButterflies = 20;
+      const radius = 100;
+      let centerX = window.innerWidth / 2;
+        let centerY = window.innerHeight / 2;
+        let angleOffset = 0;
+
+        function createButterflies() {
+            for (let i = 0; i < numButterflies; i++) {
+                let butterfly = document.createElement("img");
+                butterfly.src = "butterflies.png"; // Replace with actual butterfly image URL
+                butterfly.className = "butterfly";
+                document.body.appendChild(butterfly);
+                butterflies.push({ element: butterfly, angle: (i / numButterflies) * (2 * Math.PI) });
+            }
+            animateButterflies();
+        }
+
+        function animateButterflies() {
+            angleOffset += 0.05; // Speed of rotation
+            butterflies.forEach((butterfly, index) => {
+                let angle = butterfly.angle + angleOffset;
+                let x = centerX + radius * Math.cos(angle);
+                let y = centerY + radius * Math.sin(angle);
+                
+                butterfly.element.style.left = `${x}px`;
+                butterfly.element.style.top = `${y}px`;
+            });
+            requestAnimationFrame(animateButterflies);
+        }
+
+        document.addEventListener("mousemove", (event) => {
+            centerX = event.clientX;
+            centerY = event.clientY;
+        });
+
+        window.onload = createButterflies;
+  </script>
+  </body>
+</html>

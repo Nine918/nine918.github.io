@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background: url('helper.png') repeat; /* Replace with your tiled image URL */
+          background-size: 300px; /* Keeps the image in its original size */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+      }
+      .chat-container {
+          width: 60%;
+          max-width: 700px;
+          background-color: rgba(255, 255, 255, 0.8); /* Slight opacity for better contrast with background */
+          border-radius: 10px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      .chat-header {
+          font-size: 1.25rem;
+          font-weight: bold;
+          text-align: center;
+      }
+      .chat-input-container {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+      }
+      .chat-input-container input {
+          padding: 10px;
+          margin: 10px 0;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 1rem;
+          width: 100%;
+          box-sizing: border-box;
+          max-width: 100%;
+          min-width: 0;
+      }
+      .chat-button {
+          background-color: black;
+          color: white;
+          border: none;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background-color 0.3s;
+      }
+      .chat-button:hover {
+          background-color: #333;
+      }
+  </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">Help</div>
+    <div class="chat-input-container">
+        <input type="text" id="userInput" placeholder="Write something" oninput="handleTyping()">
+        <button class="chat-button" onclick="showResponse()">Send</button>
+    </div>
+</div>
+
+<script>
+    // Predefined sentences
+    const sentences = [
+        "I can't",
+        "How am I even supposed to help",
+        "This is hopeless",
+        "Breathe slowly, I am here with you"
+    ];
+    
+    let currentSentenceIndex = 0;
+    let currentText = "";
+    let typingMode = true;
+
+    // Secret code for redirection
+    const secretCode = "Breathe slowly, I am here with you";
+
+    // Function to handle typing and deletion logic
+    function handleTyping() {
+        const userInput = document.getElementById('userInput');
+        const body = document.body; // To modify background color
+
+        if (typingMode) {
+            // Typing mode: reveal sentence progressively
+            if (userInput.value.length > currentText.length) {
+                currentText = sentences[currentSentenceIndex].substring(0, userInput.value.length);
+            }
+
+            userInput.value = currentText;
+
+            // When the sentence is fully typed, switch to deletion mode and disable input if it's the last sentence
+            if (currentText.length >= sentences[currentSentenceIndex].length) {
+                if (currentSentenceIndex === sentences.length - 1) {
+                    // Change background color to white when the last sentence is completed
+                    body.style.background = "white"; // Overwrite the image background
+                    userInput.setAttribute("disabled", "true"); // Disable input after last sentence
+                }
+                typingMode = false; // Switch to deletion mode
+            }
+        } else {
+            // Deletion mode: delete the sentence progressively as the user types
+            currentText = sentences[currentSentenceIndex].substring(0, userInput.value.length - 1);
+            userInput.value = currentText;
+
+            // If the sentence is fully deleted, move to the next sentence
+            if (currentText.length === 0) {
+                currentSentenceIndex++;
+                if (currentSentenceIndex < sentences.length) {
+                    typingMode = true; // Switch back to typing mode
+                } else {
+                    return; // No more sentences to type, the input is already disabled
+                }
+            }
+        }
+    }
+
+
+    // Function to handle the 'Ask' button
+    function showResponse() {
+        const userInput = document.getElementById('userInput').value;
+        
+        if (userInput.trim() === secretCode) {
+            // Redirect to Website A if the secret code matches
+            window.location.href = "drag2.html";
+        } else {
+            // Redirect to Website B if the code does not match
+            window.location.href = "end.html";
+        }
+    }
+</script>
+
+</body>
+</html>

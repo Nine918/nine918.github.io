@@ -75,6 +75,33 @@
       80% { color: hsl(288, 100%, 50%); }
       100% { color: hsl(360, 100%, 50%); }
     }
+
+    .background-wrapper::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover; /* Ensures the image covers the entire screen */
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: opacity 1s ease-in-out;
+    z-index: -1;
+    display: none; /* Initially hidden */
+  }
+
+  .show-background::before {
+    display: block;
+    background-image: url("rorschach.gif"); /* Replace with your image */
+  }
+
+
+  /* Inverted background effect */
+  .inverted-background::before {
+    filter: invert(1);
+  }
   </style>
 </head>
 <body>
@@ -86,6 +113,7 @@
 
   <script>
     const conversations = [
+      
       "Sometimes I feel like the world would be better off without me.",
       "That’s a very painful thought to carry. Let’s talk about it.",
       "I can’t seem to escape the darkness in my mind.",
@@ -149,11 +177,62 @@
       "I just want someone to understand how much I’m hurting.",
       "I hear your pain, and I want to understand it better. Let’s talk about it.",
       "Sometimes I think it’d be easier if I just didn’t exist.",
-      "Your existence matters. Let’s work on making it feel that way to you too."
+      "Your existence matters. Let’s work on making it feel that way to you too.",
+      "Nothing I do matters",  
+      "The universe doesn’t care, and neither do I",  
+      "Pain is just a reminder that I’m still here, for now",  
+     "Every choice leads to the same end, so why bother?",  
+"I’m just a flicker in an indifferent void",  
+"The stars don’t shine for me; they burn because they must",  
+"There’s no grand design, only blind chaos",  
+"Hope is a cruel joke my mind plays on itself",  
+"One day, I’ll be forgotten, just like everyone else",  
+"I don’t matter, and that’s strangely freeing",  
+"The only thing waiting at the end is silence",  
+"I will rot the same way, no matter how I lived",  
+"Love, hate, joy, pain—it all dissolves into nothing",  
+"I was born without purpose, and I’ll die the same way",  
+"No one is coming to save me because there’s nothing to be saved from",  
+"If existence has no meaning, then neither does suffering",  
+"The world spins on, indifferent to my struggles",  
+"Everything is temporary, even the things that feel eternal",  
+"Time erases all, including the pain I think is unbearable",  
+"The void does not judge; it simply is",  
+"I could disappear tomorrow, and the world wouldn’t blink",  
+"There’s no cosmic justice, only random consequence",  
+"What I love will leave, and what I fear will come",  
+"The abyss has no bottom, only an endless descent",  
+"The universe won’t grieve when I’m gone",  
+"My memories will fade, just like me",  
+"No one ever really wins; they just delay losing",  
+"Every breath brings me closer to the inevitable",  
+"There’s nothing special about my suffering—it’s just a drop in an endless ocean",  
+"I can scream into the void, but the void doesn’t care",  
+"Meaning is a fairytale for those afraid of the truth",  
+"Tomorrow is just another empty promise",  
+"My legacy will be dust, just like those before me",  
+"We are all passengers on a sinking ship",  
+"The pursuit of happiness is just another distraction from reality",  
+"I exist only because of chance, not design",  
+"The things I fear the most will come, and then they’ll go, just like everything else",  
+"The silence after death is the only true peace",  
+"There is no justice, only cause and effect",  
+"I’m just decaying matter pretending to have purpose",  
+"The clock keeps ticking, whether I move or stand still",  
+"No act of kindness or cruelty will echo beyond my time",  
+"I was never meant to be anything more than temporary",  
+"All roads lead to the same destination—nothingness",  
+"The things I hold dear will turn to dust, like everything else",  
+"The universe is deaf to my prayers and blind to my pain",  
+"No one is watching, no one is listening, and no one will remember",  
+"My greatest achievements are just footnotes in oblivion",  
+"I am free to do whatever I want because, in the end, it won’t matter"  
+
     ];
 
     let generationCount = 0;
     let jargonLevel = 0;
+    let audio = null;
 
     function generateConversation() {
       const randomIndex = Math.floor(Math.random() * conversations.length);
@@ -179,33 +258,51 @@
     } else {
       conversationText.style.filter = "none";
     }
-    if (jargonLevel >= 4) {
-      document.body.style.backgroundImage = "url('rorschach.gif')";
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backgroundPosition = "center";
-    } else {
-      document.body.style.backgroundImage = "none";
+    if (!document.body.classList.contains("background-wrapper")) {
+      document.body.classList.add("background-wrapper");
     }
+    if (jargonLevel >= 4) {
+      document.body.classList.add("background-wrapper", "show-background");
+
+      // Start playing music at jargon level 4
+      if (!audio) {
+        audio = new Audio("acdrone1 .mp3"); // Change to your audio file URL
+        audio.loop = true;
+        audio.play().catch(error => console.log("Autoplay blocked:", error));
+      }
+    } else {
+      document.body.classList.remove("show-background");
+    }
+
     const yesButton = document.getElementById("generate-btn");
-    if (jargonLevel >= 6) {
-      document.getElementById("header-text").textContent = "Are you still here?";
+    if (jargonLevel >= 7) {
+      document.getElementById("header-text").textContent = "Are you still there?";
       yesButton.textContent = "Yes";
     }
 
     // Add a "No" button if jargon level is 7 or above
-    if (jargonLevel >= 6 && !document.getElementById("no-btn")) {
+    if (jargonLevel >= 7 && !document.getElementById("no-btn")) {
       const noButton = document.createElement("button");
       noButton.id = "no-btn";
       noButton.textContent = "No";
       noButton.style.marginLeft = "10px";
       noButton.onclick = function() {
-        window.location.href = "https://your-new-website.com"; // Change URL to desired destination
+        window.location.href = "end.html"; // Change URL to desired destination
       };
       document.getElementById("generate-btn").after(noButton);
+
+      yesButton.style.marginRight = "40px"; // Increase space between Yes and No
+      noButton.style.marginLeft = "40px"; 
     }
-    if (jargonLevel > 8) {
+       // Invert background color when jargon level reaches 8+
+       if (jargonLevel >= 8) {
+      document.body.classList.add("inverted-background");
+    } else {
+      document.body.classList.remove("inverted-background");
+    }
+    if (jargonLevel > 9) {
       yesButton.onclick = function () {
-        window.location.href = "https://your-new-website.com"; // Change this URL
+        window.location.href = "tenacity.html"; // Change this URL
       };
     } else {
       yesButton.onclick = generateConversation; // Ensures normal function until jargonLevel > 8
